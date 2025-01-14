@@ -1,6 +1,6 @@
 
 
-// export type TierNames = keyof typeof subscriptionTiers
+export type TierNames = keyof typeof subscriptionTiers
 // export type PaidTierNames = Exclude<TierNames, "Free">
 
 export const subscriptionTiers = {
