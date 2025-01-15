@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { env } from "@/data/env/server";
 import { createUserSubscription } from "@/server/db/subscription";
+import { deleteUser } from "@/server/db/users";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = env.CLERK_WEBHOOK_SECRET;
@@ -61,12 +62,17 @@ export async function POST(req: Request) {
       })
       break;
     }
+    case "user.deleted": {
+      if (evt.data.id !== undefined) {
+        await deleteUser(evt.data.id);
+    }
   }
+}
   // For this guide, log payload to console
-  const { id } = evt.data;
-  const eventType = evt.type;
-  console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
-  console.log("Webhook payload:", body);
+  // const { id } = evt.data;
+  // const eventType = evt.type;
+  // console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
+  // console.log("Webhook payload:", body);
 
   return new Response("Webhook received", { status: 200 });
 }
